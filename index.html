@@ -1,1 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Интерактивная карта мира</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #121212;
+        color: #e0e0e0;
+        overflow: hidden;
+    }
+
+    #navbar {
+        width: 100%;
+        height: 11vh;
+        background: #1e1e1e;
+        color: white;
+        display: flex;
+        align-items: center;
+        padding: 0 25px;
+        justify-content: space-between;
+        box-sizing: border-box;
+        border-bottom: 2px solid #333;
+    }
+
+    #navbar-title {
+        font-size: 22px;
+        font-weight: bold;
+    }
+
+    .tab-btn {
+        font-size: 18px;
+        cursor: pointer !important;
+        padding: 10px 20px;
+        border-radius: 10px;
+        transition: 0.25s;
+        border: 1px solid #444;
+        background: #1e1e1e;
+        color: #ccc;
+        user-select: none;
+    }
+
+    .tab-btn:hover {
+        background: #2a2a2a;
+        color: white;
+    }
+
+    .tab-active {
+        background: #ffffff;
+        color: #1e1e1e;
+        font-weight: bold;
+        border-color: #fff;
+        transform: scale(1.05);
+    }
+
+    #main-page, #countries-page {
+        width: 100%;
+        height: 89vh;
+        overflow-y: auto;
+        display: none;
+    }
+
+    #main-page {
+        display: block;
+    }
+
+    #map {
+        width: 100%;
+        height: 100%;
+    }
+
+    #info {
+        position: fixed;
+        top: 13vh;
+        left: 90px;
+        background: #1f1f1f;
+        padding: 12px;
+        border-radius: 10px;
+        z-index: 1000;
+        box-shadow: 0 0 10px rgba(0,0,0,0.6);
+        min-width: 260px;
+        border: 1px solid #333;
+        color: #eee;
+    }
+
+    .leaflet-control-attribution {
+        display: none !important;
+    }
+
+    .country-card {
+        background: #1b1b1b;
+        margin: 20px;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.6);
+        max-width: 900px;
+        border: 1px solid #333;
+    }
+
+    .country-card img {
+        width: 100%;
+        height: 350px;
+        object-fit: cover;
+        border-radius: 12px;
+    }
+
+    .country-title {
+        font-size: 26px;
+        font-weight: bold;
+        margin: 12px 0 6px 0;
+    }
+
+    .country-text {
+        font-size: 17px;
+        line-height: 1.45;
+        color: #ddd;
+    }
+</style>
+</head>
+<body>
+
+<div id="navbar">
+    <div id="navbar-title">Сделано Щ. Артём 7А</div>
+
+    <div style="display:flex; gap:12px;">
+        <div id="btn-main" class="tab-btn tab-active" onclick="openTab('main')">Главное</div>
+        <div id="btn-countries" class="tab-btn" onclick="openTab('countries')">Страны</div>
+    </div>
+</div>
+
+<div id="main-page">
+    <div id="info">
+        <b>Кликните по карте</b><br>
+        Чтобы узнать страну, город и координаты.
+    </div>
+    <div id="map"></div>
+</div>
+
+<div id="countries-page">
+    <div class="country-card">
+        <img src="https://raw.githubusercontent.com/Assasin2431/quest/main/Luxembourg.jpg?raw=1">
+        <div class="country-title">1. Люксембург</div>
+        <div class="country-text">
+            Люксембург — безопасная страна с высоким уровнем доходов. Здесь отличная инфраструктура, чистота, хороший транспорт и качественные соц. услуги.
+        </div>
+    </div>
+
+    <div class="country-card">
+        <img src="https://raw.githubusercontent.com/Assasin2431/quest/main/netherlands.jpg?raw=1">
+        <div class="country-title">2. Нидерланды</div>
+        <div class="country-text">
+            Нидерланды славятся стабильностью, экологией и удобством. Отличное место для работы, учёбы и комфортной жизни.
+        </div>
+    </div>
+
+    <div class="country-card">
+        <img src="https://raw.githubusercontent.com/Assasin2431/quest/main/danya.jpg?raw=1">
+        <div class="country-title">3. Дания</div>
+        <div class="country-text">
+            Дания входит в число самых счастливых стран. Здесь высокий уровень развития, безопасности и социальной поддержки.
+        </div>
+    </div>
+
+    <div class="country-card">
+        <img src="https://raw.githubusercontent.com/Assasin2431/quest/main/oman.jpg?raw=1">
+        <div class="country-title">4. Оман</div>
+        <div class="country-text">
+            Оман — спокойная и безопасная страна с тёплым климатом. Современные города, чистота и дружелюбные жители.
+        </div>
+    </div>
+
+    <div class="country-card">
+        <img src="https://raw.githubusercontent.com/Assasin2431/quest/main/sveizaria.jpg?raw=1">
+        <div class="country-title">5. Швейцария</div>
+        <div class="country-text">
+            Швейцария — одна из самых развитых стран мира. Экология, медицина и безопасность на высочайшем уровне.
+        </div>
+    </div>
+</div>
+
+<script>
+function openTab(tab) {
+    document.getElementById("main-page").style.display = tab === "main" ? "block" : "none";
+    document.getElementById("countries-page").style.display = tab === "countries" ? "block" : "none";
+
+    document.getElementById("btn-main").classList.toggle("tab-active", tab === "main");
+    document.getElementById("btn-countries").classList.toggle("tab-active", tab === "countries");
+}
+
+const bounds = L.latLngBounds(
+    L.latLng(-85, -180),
+    L.latLng(85, 180)
+);
+
+const map = L.map('map', {
+    minZoom: 2,
+    maxZoom: 12,
+    maxBounds: bounds,
+    maxBoundsViscosity: 1.0
+}).setView([20, 0], 3);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 12
+}).addTo(map);
+
+let marker;
+let highlightCircle;
+
+map.on('click', async function(e) {
+    const lat = e.latlng.lat;
+    const lon = e.latlng.lng;
+
+    if (marker) marker.remove();
+    marker = L.marker([lat, lon]).addTo(map);
+
+    if (highlightCircle) highlightCircle.remove();
+    highlightCircle = L.circle([lat, lon], {
+        radius: 20000,
+        color: "#00d8ff",
+        weight: 2
+    }).addTo(map);
+
+    document.getElementById("info").innerHTML = `
+        <b>Поиск...</b><br>
+        Координаты: ${lat.toFixed(5)}, ${lon.toFixed(5)}
+    `;
+
+    const url = `https://nominatim.openstreetmap.org/reverse?format=json&zoom=18&lat=${lat}&lon=${lon}&addressdetails=1`;
+    const res = await fetch(url);
+    const data = await res.json();
+
+    const address = data.address || {};
+
+    const country = address.country || "Не найдено";
+    const city =
+        address.city ||
+        address.town ||
+        address.village ||
+        "Не найден";
+
+    document.getElementById("info").innerHTML = `
+        <b>Страна:</b> ${country}<br>
+        <b>Город:</b> ${city}<br>
+        <b>Координаты:</b> ${lat.toFixed(5)}, ${lon.toFixed(5)}
+    `;
+});
+</script>
+
+</body>
+</html>
