@@ -5,6 +5,7 @@
 <title>Интерактивная карта мира</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!-- Leaflet -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -17,6 +18,7 @@
         overflow: hidden;
     }
 
+    /* Верхняя панель */
     #navbar {
         width: 100%;
         height: 11vh;
@@ -35,6 +37,14 @@
         font-weight: bold;
     }
 
+    /* Адаптив для мобильных */
+    @media (max-width: 480px) {
+        #navbar-title {
+            font-size: 16px; /* уменьшение для маленьких экранов */
+        }
+    }
+
+    /* Вкладки как кнопки */
     .tab-btn {
         font-size: 18px;
         cursor: pointer !important;
@@ -60,6 +70,7 @@
         transform: scale(1.05);
     }
 
+    /* Страницы */
     #main-page, #countries-page {
         width: 100%;
         height: 89vh;
@@ -76,6 +87,7 @@
         height: 100%;
     }
 
+    /* Информация */
     #info {
         position: fixed;
         top: 13vh;
@@ -90,10 +102,12 @@
         color: #eee;
     }
 
+    /* Удаляем текст Leaflet */
     .leaflet-control-attribution {
         display: none !important;
     }
 
+    /* Карточки стран */
     .country-card {
         background: #1b1b1b;
         margin: 20px;
@@ -126,8 +140,9 @@
 </head>
 <body>
 
+<!-- Навбар -->
 <div id="navbar">
-    <div id="navbar-title">Сделано Щ. Артём 7А</div>
+    <div id="navbar-title">Сделано Щ. Артёмом 7А</div>
 
     <div style="display:flex; gap:12px;">
         <div id="btn-main" class="tab-btn tab-active" onclick="openTab('main')">Главное</div>
@@ -135,6 +150,7 @@
     </div>
 </div>
 
+<!-- Главная страница -->
 <div id="main-page">
     <div id="info">
         <b>Кликните по карте</b><br>
@@ -143,49 +159,63 @@
     <div id="map"></div>
 </div>
 
+<!-- Страница стран -->
 <div id="countries-page">
+
+    <!-- 1. Люксембург -->
     <div class="country-card">
         <img src="https://raw.githubusercontent.com/Assasin2431/quest/main/Luxembourg.jpg?raw=1">
         <div class="country-title">1. Люксембург</div>
         <div class="country-text">
-            Люксембург — безопасная страна с высоким уровнем доходов. Здесь отличная инфраструктура, чистота, хороший транспорт и качественные соц. услуги.
+            Люксембург — безопасная страна с высоким уровнем доходов. 
+            Здесь отличная инфраструктура, чистота, хороший транспорт и качественные соц. услуги.
         </div>
     </div>
 
+    <!-- 2. Нидерланды -->
     <div class="country-card">
         <img src="https://raw.githubusercontent.com/Assasin2431/quest/main/netherlands.jpg?raw=1">
         <div class="country-title">2. Нидерланды</div>
         <div class="country-text">
-            Нидерланды славятся стабильностью, экологией и удобством. Отличное место для работы, учёбы и комфортной жизни.
+            Нидерланды славятся стабильностью, экологией и удобством. 
+            Отличное место для работы, учёбы и комфортной жизни.
         </div>
     </div>
 
+    <!-- 3. Дания -->
     <div class="country-card">
         <img src="https://raw.githubusercontent.com/Assasin2431/quest/main/danya.jpg?raw=1">
         <div class="country-title">3. Дания</div>
         <div class="country-text">
-            Дания входит в число самых счастливых стран. Здесь высокий уровень развития, безопасности и социальной поддержки.
+            Дания входит в число самых счастливых стран. 
+            Здесь высокий уровень развития, безопасности и социальной поддержки.
         </div>
     </div>
 
+    <!-- 4. Оман -->
     <div class="country-card">
         <img src="https://raw.githubusercontent.com/Assasin2431/quest/main/oman.jpg?raw=1">
         <div class="country-title">4. Оман</div>
         <div class="country-text">
-            Оман — спокойная и безопасная страна с тёплым климатом. Современные города, чистота и дружелюбные жители.
+            Оман — спокойная и безопасная страна с тёплым климатом. 
+            Современные города, чистота и дружелюбные жители.
         </div>
     </div>
 
+    <!-- 5. Швейцария -->
     <div class="country-card">
         <img src="https://raw.githubusercontent.com/Assasin2431/quest/main/sveizaria.jpg?raw=1">
         <div class="country-title">5. Швейцария</div>
         <div class="country-text">
-            Швейцария — одна из самых развитых стран мира. Экология, медицина и безопасность на высочайшем уровне.
+            Швейцария — одна из самых развитых стран мира. 
+            Экология, медицина и безопасность на высочайшем уровне.
         </div>
     </div>
+
 </div>
 
 <script>
+/* ---------- Переключение вкладок ---------- */
 function openTab(tab) {
     document.getElementById("main-page").style.display = tab === "main" ? "block" : "none";
     document.getElementById("countries-page").style.display = tab === "countries" ? "block" : "none";
@@ -194,6 +224,7 @@ function openTab(tab) {
     document.getElementById("btn-countries").classList.toggle("tab-active", tab === "countries");
 }
 
+/* ---------- Карта и ограничения ---------- */
 const bounds = L.latLngBounds(
     L.latLng(-85, -180),
     L.latLng(85, 180)
@@ -213,6 +244,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 let marker;
 let highlightCircle;
 
+/* ---------- Клик по карте ---------- */
 map.on('click', async function(e) {
     const lat = e.latlng.lat;
     const lon = e.latlng.lng;
@@ -233,6 +265,7 @@ map.on('click', async function(e) {
     `;
 
     const url = `https://nominatim.openstreetmap.org/reverse?format=json&zoom=18&lat=${lat}&lon=${lon}&addressdetails=1`;
+
     const res = await fetch(url);
     const data = await res.json();
 
